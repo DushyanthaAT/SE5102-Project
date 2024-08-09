@@ -154,3 +154,105 @@ describe('Product Routes', () => {
     expect(res.body.message).toBe('Review saved successfully.');
   });
 });
+
+it('should return 404 when posting a review to a non-existing product', async () => {
+  const res = await request(app)
+    .post('/api/products/60c72b2f5f1b2f1b3c8a4c2f/reviews')
+    .send({
+      name: 'Jane Doe',
+      rating: 4,
+      comment: 'Nice product!',
+    });
+  expect(res.statusCode).toBe(404);
+  expect(res.body.message).toBe('Product Not Found');
+});
+
+it('should fetch products sorted by price in ascending order', async () => {
+  const product1 = new Product({
+    name: 'Cheap Product',
+    price: 50,
+    image: 'cheap.jpg',
+    brand: 'Cheap Brand',
+    category: 'Cheap Category',
+    countInStock: 10,
+    description: 'Cheap description',
+  });
+
+  const product2 = new Product({
+    name: 'Expensive Product',
+    price: 500,
+    image: 'expensive.jpg',
+    brand: 'Expensive Brand',
+    category: 'Expensive Category',
+    countInStock: 5,
+    description: 'Expensive description',
+  });
+
+  await product1.save();
+  await product2.save();
+
+  const res = await request(app).get('/api/products?sortOrder=lowest');
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toHaveLength(2);
+  expect(res.body[0].name).toBe('Cheap Product');
+});
+
+it('should fetch products with search keyword', async () => {
+  const product = new Product({
+    name: 'Unique Product',
+    price: 150,
+    image: 'unique.jpg',
+    brand: 'Unique Brand',
+    category: 'Unique Category',
+    countInStock: 10,
+    description: 'Unique description',
+  });
+  await product.save();
+
+  const res = await request(app).get('/api/products?searchKeyword=Unique');
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toHaveLength(1);
+  expect(res.body[0].name).toBe('Unique Product');
+});
+
+it('should fetch products with category filter', async () => {
+  const product1 = new Product({
+    name: 'Product 1',
+    price: 100,
+    image: 'product1.jpg',
+    brand: 'Brand 1',
+    category: 'Category 1',
+    countInStock: 10,
+    description: 'Description 1',
+  });
+
+  const product2 = new Product({
+    name: 'Product 2',
+    price: 200,
+    image: 'product2.jpg',
+    brand: 'Brand 2',
+    category: 'Category 2',
+    countInStock: 20,
+    description: 'Description 2',
+  });
+
+  await product1.save();
+  await product2.save();
+
+  const res = await request(app).get('/api/products?category=Category 1');
+  expect(res.statusCode).toBe(200);
+  expect(res.body).toHaveLength(1);
+  expect(res.body[0].category).toBe('Category 1');
+});
+
+it('should return 404 when posting a review to a non-existing product', async () => {
+  const res = await request(app)
+    .post('/api/products/60c72b2f5f1b2f1b3c8a4c2f/reviews')
+    .send({
+      name: 'Jane Doe',
+      rating: 4,
+      comment: 'Nice product!',
+    });
+  expect(res.statusCode).toBe(404);
+  expect(res.body.message).toBe('Product Not Found');
+});

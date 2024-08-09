@@ -145,3 +145,48 @@ describe('GET /api/users/createadmin', () => {
     expect(response.body.message).toBe('Error creating admin');
   });
 });
+
+test('should update user password if provided', async () => {
+  const mockUser = {
+    _id: 'userId',
+    name: 'John Doe',
+    email: 'johndoe@example.com',
+    password: 'oldPassword',
+    save: jest.fn().mockResolvedValue({
+      _id: 'userId',
+      name: 'John Doe',
+      email: 'johndoe@example.com',
+      password: 'newPassword',
+      isAdmin: false,
+    }),
+  };
+
+  User.findById.mockResolvedValue(mockUser);
+  isAuth.mockImplementation((req, res, next) => next());
+
+  const response = await request(app)
+    .put('/api/users/userId')
+    .send({ password: 'newPassword' });
+
+  expect(response.status).toBe(200);
+  expect(response.body.name).toBe('John Doe');
+  expect(mockUser.save).toHaveBeenCalled();
+  expect(mockUser.password).toBe('newPassword');
+});
+
+
+describe('Security Tests', () => {
+  it('should block access to PUT /api/users/:id if not authenticated', async () => {
+    isAuth.mockImplementation((req, res, next) => {
+      res.status(401).send({ message: 'Unauthorized' });
+    });
+
+    const response = await request(app)
+      .put('/api/users/userId')
+      .send({ name: 'Jane Doe' });
+
+    expect(response.status).toBe(401);
+    expect(response.body.message).toBe('Unauthorized');
+  });
+});
+

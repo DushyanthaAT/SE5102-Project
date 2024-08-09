@@ -161,3 +161,31 @@ describe('DELETE /api/orders/:id', () => {
     });
   });
   
+
+  describe('DELETE /api/orders/:id', () => {
+    it('should return 403 if the user is not an admin', async () => {
+      isAdmin.mockImplementation((req, res, next) => {
+        res.status(403).send('Admin token is not valid.');
+      });
+  
+      const response = await request(app).delete('/api/orders/order1');
+      expect(response.status).toBe(403);
+      expect(response.text).toBe('Admin token is not valid.');
+    });
+  });
+  
+
+  describe('GET /api/orders', () => {
+    it('should return 401 if user is not authenticated', async () => {
+      isAuth.mockImplementation((req, res, next) => {
+        res.status(401).send('Token is not valid.');
+      });
+  
+      const response = await request(app).get('/api/orders');
+      expect(response.status).toBe(401);
+      expect(response.text).toBe('Token is not valid.');
+    });
+  });
+  
+
+  
