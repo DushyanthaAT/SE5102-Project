@@ -256,3 +256,25 @@ it('should return 404 when posting a review to a non-existing product', async ()
   expect(res.statusCode).toBe(404);
   expect(res.body.message).toBe('Product Not Found');
 });
+
+
+
+
+describe('Additional Product Route Tests', () => {
+  it('should return 500 when trying to update a non-existing product', async () => {
+    const res = await request(app)
+      .put('/api/products/60c72b2f5f1b2f1b3c8a4c2f')
+      .send({
+        name: 'Non-Existing Product',
+        price: 200,
+        image: 'non-existing.jpg',
+        brand: 'Non-Existing Brand',
+        category: 'Non-Existing Category',
+        countInStock: 0,
+        description: 'Description for a non-existing product',
+      });
+    expect(res.statusCode).toBe(500);
+    expect(res.body.message).toBe(' Error in Updating Product.');
+  });
+  
+});
