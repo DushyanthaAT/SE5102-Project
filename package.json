@@ -32,8 +32,21 @@
     "start": "nodemon --watch backend --exec babel-node backend/server.js",
     "build": "rm -rf dist && babel backend -d dist  && cd frontend && npm install && npm run build",
     "heroku-postbuild-x": "npm run build && cd frontend && npm install && npm run build",
-    "test": "jest"
+    "test": "jest",
+    "coverage": "jest --coverage"
   },
+
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "backend/routes/**/*.{js,ts}",  
+      "!**/node_modules/**",            
+      "!**/path/to/excluded/files/**"   
+    ],
+    "coverageDirectory": "coverage"     
+  },
+
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/basir/amazona.git"
