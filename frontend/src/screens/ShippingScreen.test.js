@@ -2,9 +2,8 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { useHistory } from 'react-router-dom';
 import ShippingScreen from './ShippingScreen';
-import '@testing-library/jest-dom'; // Import the custom matchers
+import '@testing-library/jest-dom'; 
 
-// Mock useHistory to test redirection
 jest.mock('react-router-dom', () => ({
   useHistory: jest.fn(),
 }));
@@ -19,7 +18,6 @@ describe('ShippingScreen', () => {
 
   test('renders ShippingScreen component', () => {
     render(<ShippingScreen />);
-    // Use a more specific query to find the heading
     expect(screen.getByRole('heading', { name: /shipping/i })).toBeInTheDocument();
   });
 
