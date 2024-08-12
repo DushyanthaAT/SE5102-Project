@@ -1,10 +1,10 @@
 import express from 'express';
 import request from 'supertest';
 import aws from 'aws-sdk';
-import uploadRouter from './uploadRoute'; // Adjust this path as needed
-import multer from 'multer'; // Import multer if it's not already imported
+import uploadRouter from './uploadRoute'; 
+import multer from 'multer';
 
-// Mock the S3 client from the AWS SDK
+
 jest.mock('aws-sdk', () => {
   const S3 = jest.fn(() => ({
     upload: jest.fn().mockReturnValue({
@@ -16,13 +16,12 @@ jest.mock('aws-sdk', () => {
 
   return {
     config: {
-      update: jest.fn(), // Mock the config update method
+      update: jest.fn(),
     },
     S3,
   };
 });
 
-// Mock the config module
 jest.mock('../config', () => ({
   accessKeyId: 'mockAccessKeyId',
   secretAccessKey: 'mockSecretAccessKey',
@@ -36,7 +35,7 @@ describe('File Upload', () => {
   it('should upload a file and return the file path', async () => {
     const response = await request(app)
       .post('/upload/')
-      .attach('image', 'test-image.jpg'); // Ensure this path points to a valid test image file
+      .attach('image', 'test-image.jpg'); 
 
     expect(response.status).toBe(200);
     expect(response.text).toMatch(/\/uploads[\\/]\d+\.jpg/);
