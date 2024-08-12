@@ -8,24 +8,21 @@ const app = express();
 app.use(express.json());
 app.use('/api/products', productRoutes);
 
-// Mock isAuth and isAdmin middleware for testing
+
 jest.mock('../util', () => ({
   isAuth: (req, res, next) => next(),
   isAdmin: (req, res, next) => next(),
 }));
 
 beforeAll(async () => {
-  // Connect to the in-memory MongoDB database before all tests
   await mongoose.connect('mongodb://localhost/test', { useNewUrlParser: true, useUnifiedTopology: true });
 });
 
 afterEach(async () => {
-  // Clean up the database after each test
   await Product.deleteMany({});
 });
 
 afterAll(async () => {
-  // Disconnect from the database after all tests
   await mongoose.connection.close();
 });
 

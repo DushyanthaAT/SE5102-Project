@@ -39,7 +39,20 @@
     "test": "jest",
     "coverage": "yarn test --coverage"
 
+
   },
+
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "backend/routes/**/*.{js,ts}",  
+      "!**/node_modules/**",            
+      "!**/path/to/excluded/files/**"   
+    ],
+    "coverageDirectory": "coverage"     
+  },
+
+
   "repository": {
     "type": "git",
     "url": "git+https://github.com/basir/amazona.git"

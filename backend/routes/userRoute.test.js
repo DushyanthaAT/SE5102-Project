@@ -1,14 +1,14 @@
 import express from 'express';
-import request from 'supertest'; // To test the express routes
+import request from 'supertest'; 
 import User from '../models/userModel'; 
 import { getToken, isAuth } from '../util';
-import router from './userRoute'; // Adjust the path to your router file
+import router from './userRoute';
 
 jest.mock('../models/userModel');
 jest.mock('../util');
 
 const app = express();
-app.use(express.json()); // Middleware to parse JSON requests
+app.use(express.json());
 app.use('/api/users', router);
 
 describe('PUT /api/users/:id', () => {
@@ -141,7 +141,7 @@ describe('GET /api/users/createadmin', () => {
 
     const response = await request(app).get('/api/users/createadmin');
 
-    expect(response.status).toBe(200); // Express doesn't specify a status for errors in this route
+    expect(response.status).toBe(200); 
     expect(response.body.message).toBe('Error creating admin');
   });
 });

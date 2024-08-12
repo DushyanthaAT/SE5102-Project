@@ -29,6 +29,12 @@ describe('SigninScreen', () => {
         expect(screen.getByLabelText(/password/i).value).toBe('password123');
     });
 
+    test('renders the link to the registration page', () => {
+        const link = screen.getByRole('link', { name: /register/i });
+        expect(link).toBeInTheDocument();
+        expect(link).toHaveAttribute('href', '/register');
+    });
+    
     
 
 });
